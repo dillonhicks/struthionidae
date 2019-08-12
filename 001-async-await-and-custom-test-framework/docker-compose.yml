@@ -2,16 +2,10 @@ version: '3.1'
 
 services:
 
-  db:
+  postgres:
     image: postgres
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
     ports:
-      - 8002:5432
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8001:8080
+      - 5432
