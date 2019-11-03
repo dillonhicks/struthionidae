@@ -1,0 +1,19 @@
+[package]
+name = "002-string-caching-and-interning"
+version = "0.1.0"
+authors = ["Dillon <dillon@dillonhicks.io>"]
+edition = "2018"
+
+[lib]
+name = "lib_002_string_caching_and_interning"
+path = "src/lib.rs"
+
+[dependencies]
+struthionidae = {path = "../struthionidae" }
+rpds = { version = "0.7.0", features = [] }
+sha3 = "0.8.2"
+serde = { version = "^1.0", optional=true}
+
+[features]
+default = ["serialize"]
+serialize = ["serde", "rpds/serde"]

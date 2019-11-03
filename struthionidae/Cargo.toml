@@ -1,0 +1,30 @@
+[package]
+name = "struthionidae"
+version = "0.1.0"
+authors = ["Dillon <dillon@dillonhicks.io>"]
+edition = "2018"
+
+[lib]
+name = "struthionidae"
+path = "src/lib.rs"
+
+[dev-dependencies]
+criterion = "^0.3"
+
+[[bench]]
+name = "bytes_to_hex"
+harness = false
+
+[dependencies]
+failure = "^0.1"
+parking_lot = "^0.9"
+tracing = "^0.1"
+tracing-log = "^0.1"
+tracing-subscriber = "^0.1"
+
+generic_array1 = { package = "generic-array", version = "^0.13", optional=true }
+
+[features]
+default = ["generic_array"]
+
+generic_array = ["generic_array1"]

@@ -1,0 +1,19 @@
+[package]
+name = "003-arenas-and-bytes"
+version = "0.1.0"
+authors = ["Dillon <dillon@dillonhicks.io>"]
+edition = "2018"
+
+[lib]
+name = "lib_003_arenas_and_bytes"
+path = "src/lib.rs"
+
+[dependencies]
+struthionidae = {path = "../struthionidae" }
+serde = { version = "^1.0", optional=true, features = ["derive"]}
+bytes = { version = "^0.4" }
+libc = {version = "^0.2", features = ["std", "align", "extra_traits"]}
+
+[features]
+default = ["serialize"]
+serialize = ["serde", "bytes/serde"]
