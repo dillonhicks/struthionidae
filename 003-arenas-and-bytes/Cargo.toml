@@ -5,8 +5,9 @@ authors = ["Dillon <dillon@dillonhicks.io>"]
 edition = "2018"
 
 [lib]
-name = "lib_003_arenas_and_bytes"
+name = "rust_arena_and_bytes"
 path = "src/lib.rs"
+crate-type = ["rlib", "cdylib", "staticlib"]
 
 [dependencies]
 struthionidae = {path = "../struthionidae" }

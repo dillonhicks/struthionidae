@@ -30,6 +30,7 @@ pub mod error_code {
 
 
 pub const STRING_FIELD: FieldId = 1;
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct Span {
@@ -37,22 +38,25 @@ pub struct Span {
     pub len: libc::size_t,
 }
 
-pub unsafe extern "C" fn read_dynamically_sized_field_c(field_id: FieldId, malloc: MallocFnC, span: *mut Span) -> ErrorCode {
+#[no_mangle]
+pub unsafe extern "C" fn rust_read_dynamically_sized_field_c(field_id: FieldId, malloc: MallocFnC, span: *mut Span) -> ErrorCode {
     match field_id {
         STRING_FIELD => {
-            let thing = "hello purple turtle!";
-            let size = thing.as_bytes().len() + 1;
-            info!("calling malloc");
+            let data = "hello purple turtle!";
+            let size = data.as_bytes().len() + 1;
             let raw_ptr: *mut c_void = (malloc)(size);
             let ptr: NonNull<u8> = match NonNull::new(raw_ptr) {
                 Some(ptr) => ptr.cast(),
                 None => return error_code::OUT_OF_MEMORY
             };
-            info!("hey yo");
-            std::ptr::copy(thing.as_bytes().as_ptr(), ptr.as_ptr(), size - 1);
+            std::ptr::copy(data.as_bytes().as_ptr(), ptr.as_ptr(), data.as_bytes().len());
+            // NULL TERMINATOR
+            std::ptr::copy(b"\0".as_ptr(), ptr.as_ptr().add(data.as_bytes().len()), 1);
 
-            (*span).ptr = ptr.as_ptr().cast();
-            (*span).len = size;
+            (*span) = Span {
+                ptr: ptr.as_ptr().cast(),
+                len: size
+            };
 
         },
         _ => {
@@ -65,7 +69,7 @@ pub unsafe extern "C" fn read_dynamically_sized_field_c(field_id: FieldId, mallo
 
 unsafe extern "C" fn c_malloc(size: libc::size_t) -> *mut c_void {
     use std::alloc::{alloc, Layout};
-    alloc_zeroed(Layout::from_size_align_unchecked(size,  std::mem::size_of::<libc::size_t>())).cast()
+    alloc(Layout::from_size_align_unchecked(size,  std::mem::size_of::<libc::size_t>())).cast()
 }
 
 #[test]
