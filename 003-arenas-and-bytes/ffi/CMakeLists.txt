@@ -15,7 +15,7 @@ SET(CMAKE_LIBRARY_PATH   "$ENV{LD_LIBRARY_PATH}")
 
 ADD_EXECUTABLE(ArenaAndBytesTest ${CMAKE_SOURCE_DIR}/tests/arena_and_bytes_ffi_test.c)
 #ADD_LINK_OPTIONS(ArenaAndBytesTest "-L${CMAKE_LIBRARY_PATH}")
-TARGET_LINK_LIBRARIES(ArenaAndBytesTest -L${CMAKE_LIBRARY_PATH} potatofarmer)
+TARGET_LINK_LIBRARIES(ArenaAndBytesTest -L${CMAKE_LIBRARY_PATH} rust_arena_and_bytes)
 # Indicate which libraries to include during the link process.
 #target_link_libraries (CMakeHelloWorld Hello)
 

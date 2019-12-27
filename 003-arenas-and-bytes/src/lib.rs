@@ -1,3 +1,4 @@
+#![feature(allocator_api)]
 use std::fmt;
 use std::os::raw::c_void;
 
@@ -12,7 +13,7 @@ use crate::deps::struthionidae::logging::info;
 use crate::deps::libc;
 use std::ptr::NonNull;
 use std::ffi::CStr;
-use std::alloc::alloc_zeroed;
+use std::alloc::{alloc_zeroed, Global, Alloc, Layout};
 use std::mem::MaybeUninit;
 
 pub type MallocFnC = (unsafe extern "C" fn(libc::size_t) -> *mut c_void);
@@ -30,6 +31,8 @@ pub mod error_code {
 
 
 pub const STRING_FIELD: FieldId = 1;
+
+
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -78,7 +81,7 @@ pub fn test_alloc_into() {
     use std::mem::MaybeUninit;
     let mut span  = MaybeUninit::uninit();
 
-    assert_eq!(unsafe { read_dynamically_sized_field_c(STRING_FIELD,  c_malloc  ,  span.as_mut_ptr()) }, error_code::OK);
+    assert_eq!(unsafe { rust_read_dynamically_sized_field_c(STRING_FIELD,  c_malloc  ,  span.as_mut_ptr()) }, error_code::OK);
     let span = unsafe { span.assume_init() };
 
     let slice: &[u8] = unsafe { std::slice::from_raw_parts(span.ptr.cast(), span.len) };
@@ -102,4 +105,55 @@ pub fn test_bytes_as_arena() {
     let buf= buf.freeze();
 
 
+}
+
+
+pub type AlignedAllocFn = unsafe extern "C" fn(libc::size_t, libc::size_t) -> NonNull<u8>;
+pub type FreeFn = unsafe extern "C" fn(NonNull<u8>, libc::size_t, libc::size_t);
+
+#[repr(C)]
+#[derive(Debug)]
+pub struct ProxyAllocator {
+    aligned_alloc: AlignedAllocFn,
+    free: FreeFn
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn rust_alloc_aligned(size: usize, align: usize) -> NonNull<u8> {
+    Global.alloc(Layout::from_size_align_unchecked(size, align)).unwrap()
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn rust_free(ptr: NonNull<u8>, size: usize, align: usize) {
+    Global.dealloc(ptr, Layout::from_size_align_unchecked(size, align))
+}
+
+
+#[no_mangle]
+pub unsafe extern "C" fn Allocator_alloc(allocator: *const ProxyAllocator, size: usize, align: usize) -> NonNull<u8> {
+    ((*allocator).aligned_alloc)(size, align)
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn Allocator_free(allocator: *const ProxyAllocator, ptr: NonNull<u8>, size: usize, align: usize) {
+    ((*allocator).free)(ptr, size, align)
+}
+
+
+
+
+#[test]
+fn test_proxy_alloc() {
+
+    crate::deps::struthionidae::logging::initialize();
+
+    unsafe {
+        let allocator = ProxyAllocator { aligned_alloc: rust_alloc_aligned, free: rust_free };
+        info!("{:?}", allocator);
+        let mut ptr: NonNull<u128> = (allocator.aligned_alloc)(std::mem::size_of::<u128>(), std::mem::align_of::<u128>()).cast();
+        (*ptr.as_mut()) = 334242424211111111111111111111112u128;
+
+
+        info!("{}", ptr.as_mut());
+    }
 }

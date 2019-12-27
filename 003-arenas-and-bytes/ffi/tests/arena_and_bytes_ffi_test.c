@@ -19,5 +19,15 @@ int main(int argv, char** argc) {
 
     printf("rust: %s\n", (const char*) span.ptr);
 
+    ProxyAllocator allocator = {
+            .alloc = rust_alloc_aligned,
+            .free = rust_free,
+    };
+
+    uint64_t* heap_num = (uint64_t*)Allocator_alloc(&allocator, sizeof(uint64_t), sizeof(uint64_t));
+    *heap_num = 4314lu;
+    fprintf(stdout, "heap_num: %lu", *heap_num);
+    Allocator_free(&allocator, (void*) heap_num, sizeof(uint64_t), sizeof(uint64_t));
+
     return 0;
 }

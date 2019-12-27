@@ -1,0 +1,26 @@
+[package]
+name = "004-rust-shell-scripting"
+version = "0.1.0"
+authors = ["Dillon <dillon@dillonhicks.io>"]
+edition = "2018"
+
+[lib]
+name = "rust_shell_scripting"
+path = "src/lib.rs"
+crate-type = ["rlib", "cdylib", "staticlib"]
+
+[dependencies]
+struthionidae = {path = "../struthionidae" }
+futures = { version = "^0.3.1", features = ["thread-pool"]  }
+failure = "^0.1.6"
+failure_derive = "^0.1.6"
+os_pipe = "0.9.1"
+libc = "0.2.66"
+lazy_static = "1.4.0"
+
+serde = { version = "^1.0", optional=true, features = ["derive"]}
+bytes = { version = "^0.4" }
+
+[features]
+default = ["serialize"]
+serialize = ["serde", "bytes/serde"]
