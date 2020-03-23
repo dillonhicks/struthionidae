@@ -1,5 +1,5 @@
 [package]
-name = "002-string-caching-and-interning"
+name = "x002-string-caching-and-interning"
 version = "0.1.0"
 authors = ["Dillon <dillon@dillonhicks.io>"]
 edition = "2018"

@@ -1,5 +1,5 @@
 [package]
-name = "003-arenas-and-bytes"
+name = "x003-arenas-and-bytes"
 version = "0.1.0"
 authors = ["Dillon <dillon@dillonhicks.io>"]
 edition = "2018"

@@ -169,7 +169,7 @@ impl Future for EpollFuture {
     type Output = ();
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        self.0.wait(1);
+        self.0.wait(100);
         cx.waker().wake_by_ref();
         Poll::Pending
     }
@@ -231,14 +231,14 @@ impl fmt::Debug for PipeWriter {
         write!(f, "PipeWriter(fd: {})", self.inner.as_raw_fd())
     }
 }
-
-impl Drop for PipeWriter {
-    fn drop(&mut self) {
-        if self.eph {
-            self.epoll.ctl_del_rawfd(self.inner.as_raw_fd());
-        }
-    }
-}
+//
+//impl Drop for PipeWriter {
+//    fn drop(&mut self) {
+//        if self.eph {
+//            self.epoll.ctl_del_rawfd(self.inner.as_raw_fd());
+//        }
+//    }
+//}
 
 impl PipeWriter {
     pub fn new(inner: imp::PipeWriter) -> Self {
@@ -270,11 +270,11 @@ impl From<imp::PipeWriter> for PipeWriter {
     }
 }
 
-//    impl IntoRawFd for PipeWriter {
-//        fn into_raw_fd(self) -> RawFd {
-//            self.inner.into_raw_fd()
-//        }
-//    }
+    impl IntoRawFd for PipeWriter {
+        fn into_raw_fd(self) -> RawFd {
+            self.inner.into_raw_fd()
+        }
+    }
 
 impl AsRawFd for PipeWriter {
     fn as_raw_fd(&self) -> RawFd {
@@ -339,13 +339,13 @@ pub struct PipeReader {
     epoll: &'static Epoll,
 }
 
-impl Drop for PipeReader {
-    fn drop(&mut self) {
-        if self.eph {
-            self.epoll.ctl_del_rawfd(self.inner.as_raw_fd());
-        }
-    }
-}
+//impl Drop for PipeReader {
+//    fn drop(&mut self) {
+//        if self.eph {
+//            self.epoll.ctl_del_rawfd(self.inner.as_raw_fd());
+//        }
+//    }
+//}
 
 impl PipeReader {
     pub fn new(inner: imp::PipeReader) -> Self {
@@ -385,11 +385,11 @@ impl From<imp::PipeReader> for PipeReader {
     }
 }
 
-//    impl IntoRawFd for PipeReader {
-//        fn into_raw_fd(self) -> RawFd {
-//            self.inner.into_raw_fd()
-//        }
-//    }
+    impl IntoRawFd for PipeReader {
+        fn into_raw_fd(self) -> RawFd {
+            self.inner.into_raw_fd()
+        }
+    }
 
 impl AsRawFd for PipeReader {
     fn as_raw_fd(&self) -> RawFd {

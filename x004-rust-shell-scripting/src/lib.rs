@@ -8,7 +8,9 @@ pub(crate) mod deps {
     pub(crate) use os_pipe;
     pub(crate) use lazy_static;
     pub(crate) use libc;
+    pub(crate) use pin_utils;
 }
 
 
 pub mod process;
+pub mod pipe;

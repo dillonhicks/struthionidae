@@ -13,7 +13,7 @@ use crate::deps::struthionidae::logging::info;
 use crate::deps::libc;
 use std::ptr::NonNull;
 use std::ffi::CStr;
-use std::alloc::{alloc_zeroed, Global, Alloc, Layout};
+use std::alloc::{alloc_zeroed, Global, AllocRef, Layout};
 use std::mem::MaybeUninit;
 
 pub type MallocFnC = (unsafe extern "C" fn(libc::size_t) -> *mut c_void);
@@ -120,7 +120,8 @@ pub struct ProxyAllocator {
 
 #[no_mangle]
 pub unsafe extern "C" fn rust_alloc_aligned(size: usize, align: usize) -> NonNull<u8> {
-    Global.alloc(Layout::from_size_align_unchecked(size, align)).unwrap()
+    let (ptr, size) = Global.alloc(Layout::from_size_align_unchecked(size, align)).unwrap();
+    ptr
 }
 
 #[no_mangle]

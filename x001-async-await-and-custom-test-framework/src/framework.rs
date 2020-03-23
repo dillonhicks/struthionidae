@@ -110,7 +110,7 @@ pub trait TestRunner {
 
     fn run<T, F>(
         &mut self,
-        mut inner: F,
+        inner: F,
     ) -> Result<T, Self::Error>
     where
         F: (FnMut(&mut Self::State) -> T) + std::panic::UnwindSafe;

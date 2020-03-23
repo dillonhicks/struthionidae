@@ -1,8 +1,8 @@
 [workspace]
 members = [
     "struthionidae",
-    "001-async-await-and-custom-test-framework",
-    "002-string-caching-and-interning",
-    "003-arenas-and-bytes",
-    "004-rust-shell-scripting"
+    "x001-async-await-and-custom-test-framework",
+    "x002-string-caching-and-interning",
+    "x003-arenas-and-bytes",
+    "x004-rust-shell-scripting"
  ]
