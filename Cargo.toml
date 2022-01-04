@@ -4,5 +4,10 @@ members = [
     "x001-async-await-and-custom-test-framework",
     "x002-string-caching-and-interning",
     "x003-arenas-and-bytes",
-    "x004-rust-shell-scripting"
+    "x004-rust-shell-scripting",
  ]
+
+exclude = [
+    "x005-trees",
+    
+]
