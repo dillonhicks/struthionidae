@@ -826,6 +826,8 @@ impl Pipeline {
 
         for mut cmd in self.commands.drain(..) {
             jobs.push_back(cmd.spawn()?);
+            // give the new process a chance to start
+            std::thread::sleep(std::time::Duration::from_millis(1));
         }
 
         Ok(Job {
@@ -888,15 +890,13 @@ async fn run_async_command_test() -> Vec<std::process::Output> {
 // ls -1 | sort
 
 
-
-
 #[cfg(test)]
 async fn run_pipeline_test() -> JobOutput {
     let job = Pipeline::new(
         Command::new("/usr/bin/seq")
             .arg("1")
             .arg("500")
-        )
+    )
         .add(
             Command::new("/usr/bin/tr")
                 .arg("-d")
@@ -904,6 +904,158 @@ async fn run_pipeline_test() -> JobOutput {
         )
         .add(
             Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        ).add(
+        Command::new("/usr/bin/rev")
+    ).add(
+        Command::new("/usr/bin/rev")
+    ).add(
+        Command::new("/usr/bin/rev")
+    )
+
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        ).add(
+        Command::new("/usr/bin/rev")
+    ).add(
+        Command::new("/usr/bin/rev")
+    ).add(
+        Command::new("/usr/bin/rev")
+    )
+
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        ).add(
+        Command::new("/usr/bin/rev")
+    ).add(
+        Command::new("/usr/bin/rev")
+    ).add(
+        Command::new("/usr/bin/rev")
+    )
+
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        )
+        .add(
+            Command::new("/usr/bin/rev")
+        ).add(
+        Command::new("/usr/bin/rev")
+    ).add(
+        Command::new("/usr/bin/rev")
+    ).add(
+        Command::new("/usr/bin/rev")
+    )
+        .add(
+            Command::new("/usr/bin/tr")
+                .arg("0")
+                .arg(r#" "#)
+        )
+        .add(
+            Command::new("/usr/bin/uniq")
         )
         .spawn()
         .unwrap();
